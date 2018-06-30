@@ -12,8 +12,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += leveldb/include/
+
 SOURCES += main.cpp \
-    drupalmodel.cpp
+    drupalmodel.cpp \
+
 
 RESOURCES += qml.qrc
 
@@ -30,21 +33,24 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     drupalmodel.h \
-    leveldb/c.h \
-    leveldb/cache.h \
-    leveldb/comparator.h \
-    leveldb/db.h \
-    leveldb/dumpfile.h \
-    leveldb/env.h \
-    leveldb/export.h \
-    leveldb/filter_policy.h \
-    leveldb/iterator.h \
-    leveldb/options.h \
-    leveldb/slice.h \
-    leveldb/status.h \
-    leveldb/table_builder.h \
-    leveldb/table.h \
-    leveldb/write_batch.h
+    leveldb/include/leveldb/c.h \
+    leveldb/include/leveldb/cache.h \
+    leveldb/include/leveldb/comparator.h \
+    leveldb/include/leveldb/db.h \
+    leveldb/include/leveldb/dumpfile.h \
+    leveldb/include/leveldb/env.h \
+    leveldb/include/leveldb/export.h \
+    leveldb/include/leveldb/filter_policy.h \
+    leveldb/include/leveldb/iterator.h \
+    leveldb/include/leveldb/options.h \
+    leveldb/include/leveldb/slice.h \
+    leveldb/include/leveldb/status.h \
+    leveldb/include/leveldb/table_builder.h \
+    leveldb/include/leveldb/table.h \
+    leveldb/include/leveldb/write_batch.h \
+
+
+
 
 
 

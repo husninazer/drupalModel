@@ -5,7 +5,6 @@
 #include <QtNetwork>
 #include <QJsonDocument>
 #include <leveldb/db.h>
-#include <leveldb/options.h>
 
 
 
