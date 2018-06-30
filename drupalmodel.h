@@ -5,6 +5,7 @@
 #include <QtNetwork>
 #include <QJsonDocument>
 #include <leveldb/db.h>
+#include <leveldb/options.h>
 
 
 
@@ -30,18 +31,11 @@ public:
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
-
-
-
 private slots:
 
    void onResult(QNetworkReply* reply);
 
 private:
-
-
-
-
 
    QHash<int, QHash<QByteArray, QVariant>> _map;
 
