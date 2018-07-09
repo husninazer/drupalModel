@@ -1,34 +1,41 @@
 #include "drupalmodel.h"
 #include <QtQml>
 
+
 DrupalModel::DrupalModel(QObject *parent)
     : QAbstractListModel(parent)
 {
-   //QNetworkAccessManager networkManager;
-  // QNetworkRequest request(QUrl("http://104.251.215.93:5050/projects-list/all/all?_format=json"));
+
     _request.setUrl(QUrl("http://104.251.215.93:5050/projects-list/all/all?_format=json&items_per_page=10"));
-  //  request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     _networkManager =  new QNetworkAccessManager(this);
-  //  QNetworkReply *reply = _networkManager->get(_request);  // GET
-
-
-   // connect(reply, SIGNAL(finished()), this, SLOT(onResult(QNetworkReply*)));
-
+    QNetworkReply *reply = _networkManager->get(_request);  // GET
 
     connect(_networkManager, SIGNAL(finished(QNetworkReply*)),
               this, SLOT(onResult(QNetworkReply*)));
 
-//    QEventLoop loop;
-//    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-//    loop.exec();
 
 
-    leveldb::DB* db;
     leveldb::Options options;
     options.create_if_missing = true;
-    leveldb::Status status = leveldb::DB::Open(options, "/tmp/testdb", &db);
+    leveldb::Status status = leveldb::DB::Open(options, "/tmp/testdb", &_db);
 
+
+//    _db->Put(leveldb::WriteOptions(), "key2", "SAmple inserted Value");
+
+//    std::string value;
+//    _db->Get(leveldb::ReadOptions(), "key2", &value);
+
+
+    leveldb::Iterator* it = _db->NewIterator(leveldb::ReadOptions());
+    for (it->SeekToFirst(); it->Valid(); it->Next()) {
+      qDebug() << QString::fromStdString(it->key().ToString()) +  ": "  +  QString::fromStdString(it->value().ToString());
+    }
+
+
+    delete it;
+
+   // qDebug() << value;
 
 }
 
@@ -60,7 +67,6 @@ QHash<int, QByteArray> DrupalModel::roleNames() const
 void DrupalModel::onResult(QNetworkReply *reply)
 {
 
-
     if (reply->error() != QNetworkReply::NoError){
         qDebug() << reply->error();
         return;
@@ -88,17 +94,32 @@ void DrupalModel::onResult(QNetworkReply *reply)
          QHash<QByteArray, QVariant> bulk;
          for (int j=0; j< ele.toObject().keys().count(); j++) {
              QString key = ele.toObject().keys().at(j);
-             qDebug() << ele.toObject().keys().at(j);
+         //   qDebug() << ele.toObject().keys().at(j);
              QJsonValue value = ele.toObject().value(key);
-             qDebug() << value.toArray().at(0).toObject();
+         //    qDebug() << value.toArray().at(0).toObject();
+
+//             leveldb::Slice key_string((char*)&key, sizeof(QString));
+//             leveldb::Slice value_string((char*)&value, sizeof(QJsonValue));
+
+             //leveldb::Slice value_string((char*)&value.toArray().at(0).toObject(), sizeof(QJsonObject));
+           //  value.toArray().at(0).toObject().value("value").toString().toStdString() // I used this to get the string in the drupal value key.
+
+             _db->Put(leveldb::WriteOptions(), key.toStdString() + std::to_string(i) + std::to_string(j), value.toArray().at(0).toObject().value("value").toString().toStdString() );
              bulk.insert(key.toUtf8(), value.toArray().at(0).toObject());
             // qDebug() << key.toUtf8() << value.toString().toUtf8() ;
          }
         _map[i] = bulk;
+        leveldb::Slice bulk_conv((char*)&bulk, sizeof(QHash<QByteArray, QVariant>));
+        _db->Put(leveldb::WriteOptions(), std::to_string(i), bulk_conv);
      }
      endInsertRows();
 
-    emit countChanged();
+     emit countChanged();
+
+}
+
+
+void populateModelfromDb() {
 
 }
 

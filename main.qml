@@ -22,17 +22,17 @@ Window {
         anchors.fill: parent
         model: drupalModel
         delegate: Row {
-            Text {
-                id: title
-                text: index + '    ' + model.title.value
-                color: 'red'
-            }
+//            Text {
+//                id: title
+//                text: index + '    ' + model.title.value
+//                color: 'red'
+//            }
 
-            Text {
-                id: title2
-                text: model.body.value
-                color: 'grey'
-            }
+//            Text {
+//                id: title2
+//                text: model.body.value
+//                color: 'grey'
+//            }
 
             Text {
                 id: field_asd
@@ -40,16 +40,16 @@ Window {
                 color: 'green'
             }
 
-            Text {
-                id: field_ss
-                text: model.field_top_image.url
-                color: 'blue'
-            }
+//            Text {
+//                id: field_ss
+//                text: model.field_top_image.url
+//                color: 'blue'
+//            }
 
-            Image {
-                id: name
-                source: model.field_top_image.url
-            }
+//            Image {
+//                id: name
+//                source: model.field_top_image.url
+//            }
         }
     }
 }

@@ -4,8 +4,7 @@
 #include <QAbstractListModel>
 #include <QtNetwork>
 #include <QJsonDocument>
-#include <leveldb/db.h>
-#include <leveldb/options.h>
+#include "leveldb/db.h"
 
 
 
@@ -40,6 +39,8 @@ private:
    QHash<int, QHash<QByteArray, QVariant>> _map;
 
    QHash<int, QByteArray> _roles;
+
+    leveldb::DB* _db;
 
 signals:
 
